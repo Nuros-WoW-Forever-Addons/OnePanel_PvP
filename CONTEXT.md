@@ -10,7 +10,7 @@
 - **Current Version**: 0.0.1
 - **Suite**: Part of the **OneSuite** family (OnePanel Plugin)
 - **GitHub Repository**:
-  - Exists: FALSE
+  - Exists: TRUE
   - URL: https://github.com/Nuros-WoW-Forever-Addons/OnePanel_PvP
 - **Branching Policy**: All development must occur on a feature branch != `main` (e.g. `dev`)
 - **Live Sync Path**: `/Applications/World of Warcraft/_classic_beta_/Interface/AddOns/OnePanel_PvP/`
