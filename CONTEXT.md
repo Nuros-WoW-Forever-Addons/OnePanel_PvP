@@ -66,13 +66,19 @@ When picking up development on this addon:
 ## ✅ Recent Completed Work (Latest Spins)
 
 ### Spin 0.0.2 (Blizzard Native UI Atlases, Exact Centering & Banner Fitting)
+- **Blizzard Centerpiece Ring Geometry & Sizing**: Aligned centerpiece frame dimensions and textures with Blizzard's native `PVPRankFrame RankProgressBarDisplay`:
+  - Frame configured to 154x154 anchored `(0, -18)` below the rank title.
+  - Ring texture uses native atlas `pvpqueue-sidebar-honorbar-background` (235x209, centered `0, -1`), flawlessly framing the 115px faction disc with outer dragon wings.
+  - Safe fallback to concentric `UI-Achievement-Guild-Ring` (130x130), completely removing asymmetric `MiniMap-TrackingBorder`.
+  - Rank badge medallion anchored to `(BOTTOM, emblemFrame, BOTTOM, 0, -1)` (36x36 frame, 48x48 ring), perfectly straddling the bottom rim of the centerpiece circle.
+  - Rank points label anchored to `(TOP, emblemFrame, BOTTOM, 0, -26)` with generous breathing room.
 - **Native Blizzard UI Atlas Extraction**: Inspected `Blizzard_UIPanels_Game/Camelot/PVPRankFrame` and `CharacterFrame` and adopted the exact native graphics:
   - `UI-Character-Info-Honor-RewardRing`: Perfectly concentric circular golden coin ring, permanently resolving the off-center rank number bug caused by `MiniMap-TrackingBorder`.
   - `UI-Character-Info-Title`: Authentic 192x36 carved header plate for the milestone rewards navigation row.
-  - `UI-Character-Info-Honor-Bar`: Authentic metallic dragon-wing bezel ring.
-  - `UI-Character-Info-Honor-Bar-BG-Alliance` / `-Horde`: Circular faction background disk.
-  - `UI-Character-Info-Honor-Bar-BG-Glow`: Soft radial backlight glow behind the centerpiece emblem.
-  - `UI-Character-Info-Honor-Icon-Alliance` / `-Horde` / `UI-Character-Info-Honor-Icon-%d`: Native military rank and faction badges.
+  - `pvpqueue-sidebar-honorbar-background`: Authentic metallic dragon-wing bezel ring.
+  - `UI-Character-Info-Honor-Bar-BG-Alliance` / `-Horde`: Circular faction background disk (115x115).
+  - `UI-Character-Info-Honor-Bar-BG-Glow`: Soft radial backlight glow behind the centerpiece emblem (275x295).
+  - `UI-Character-Info-Honor-Icon-Alliance` / `-Horde` / `UI-Character-Info-Honor-Icon-%d`: Native military rank and faction badges (72x84).
   - `UI-Character-Info-GearSlot`: Authentic item reward slot container.
   - `UI-Character-Info-Honor-LevelBG`: Ornamental horizontal line under the rank title.
 - **Side Panel Banner Text Fitting**: Replaced the clickable red button with a 192px wide `UI-Character-Info-Title` header plate, embedding left (`<`) and right (`>`) arrow buttons on the outer ends. Set typography to 11pt `GameFontNormal` so `"Next Rewards at Rank 1"` fits cleanly within the 150px space without overflowing.

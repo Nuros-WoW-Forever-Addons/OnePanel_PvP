@@ -446,13 +446,14 @@ local function CreatePvPView(parentFrame)
     end
 
     -- Faction Crest & Circular Emblem Container (Centerpiece)
+    -- Matching Blizzard's PVPRankFrame RankProgressBarDisplay (size 154x154)
     local emblemFrame = CreateFrame("Frame", "OnePanel_PvPEmblemFrame", leftArea)
-    emblemFrame:SetSize(190, 170)
-    emblemFrame:SetPoint("TOP", rankTitle, "BOTTOM", 0, -14)
+    emblemFrame:SetSize(154, 154)
+    emblemFrame:SetPoint("TOP", rankTitle, "BOTTOM", 0, -18)
 
-    -- Background Soft Glow (Blizzard atlas: UI-Character-Info-Honor-Bar-BG-Glow)
+    -- Background Soft Glow (Blizzard atlas: UI-Character-Info-Honor-Bar-BG-Glow, size 275x295)
     local emblemGlow = emblemFrame:CreateTexture(nil, "BACKGROUND", nil, -2)
-    emblemGlow:SetSize(230, 245)
+    emblemGlow:SetSize(275, 295)
     emblemGlow:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
     if SafeHasAtlas("UI-Character-Info-Honor-Bar-BG-Glow") then
         emblemGlow:SetAtlas("UI-Character-Info-Honor-Bar-BG-Glow")
@@ -462,7 +463,7 @@ local function CreatePvPView(parentFrame)
     end
     emblemFrame.Glow = emblemGlow
 
-    -- Background Circular Disk (Blizzard atlas: UI-Character-Info-Honor-Bar-BG-Alliance / -Horde)
+    -- Background Circular Disk (Blizzard atlas: UI-Character-Info-Honor-Bar-BG-Alliance / -Horde, size 115x115)
     local emblemBg = emblemFrame:CreateTexture(nil, "BACKGROUND", nil, -1)
     emblemBg:SetSize(115, 115)
     emblemBg:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
@@ -474,36 +475,43 @@ local function CreatePvPView(parentFrame)
     end
     emblemFrame.Bg = emblemBg
 
-    -- Central Faction Crest / Rank Icon (Blizzard atlas: UI-Character-Info-Honor-Icon-Alliance / -Horde or -%d)
+    -- Central Faction Crest / Rank Icon (Blizzard atlas: UI-Character-Info-Honor-Icon-Alliance / -Horde or -%d, size 72x84)
     local emblemIcon = emblemFrame:CreateTexture(nil, "ARTWORK")
     emblemIcon:SetSize(72, 84)
     emblemIcon:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
     if SafeHasAtlas("UI-Character-Info-Honor-Icon-Alliance") then
         emblemIcon:SetAtlas("UI-Character-Info-Honor-Icon-Alliance", true)
     else
-        emblemIcon:SetSize(88, 88)
+        emblemIcon:SetSize(72, 84)
         emblemIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
     end
     emblemFrame.Icon = emblemIcon
 
-    -- Outer Metallic Ring / Bezel with dragon/flourish wings (Blizzard atlas: UI-Character-Info-Honor-Bar)
+    -- Outer Metallic Ring / Bezel with dragon/flourish wings
+    -- Blizzard atlas: pvpqueue-sidebar-honorbar-background (235x209, center 0, -1)
     local emblemRing = emblemFrame:CreateTexture(nil, "BORDER")
-    emblemRing:SetSize(190, 169)
-    emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, -1)
-    if SafeHasAtlas("UI-Character-Info-Honor-Bar") then
+    if SafeHasAtlas("pvpqueue-sidebar-honorbar-background") then
+        emblemRing:SetAtlas("pvpqueue-sidebar-honorbar-background")
+        emblemRing:SetSize(235, 209)
+        emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, -1)
+    elseif SafeHasAtlas("UI-Character-Info-Honor-Bar") then
         emblemRing:SetAtlas("UI-Character-Info-Honor-Bar")
+        emblemRing:SetSize(235, 209)
+        emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, -1)
     else
-        emblemRing:SetSize(140, 140)
-        emblemRing:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-        emblemRing:SetVertexColor(0.65, 0.65, 0.70, 1)
+        -- Clean concentric circular ring fallback matching the 115px disk diameter
+        emblemRing:SetSize(130, 130)
+        emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
+        emblemRing:SetTexture("Interface\\AchievementFrame\\UI-Achievement-Guild-Ring")
+        emblemRing:SetVertexColor(0.85, 0.75, 0.35, 1)
     end
     emblemFrame.Ring = emblemRing
 
     -- Bottom Rank Number Medallion (Circular golden coin badge anchored to bottom rim)
-    -- Matching Blizzard's PVPHonorRewardTemplate: size 36x36, ring 48x48
+    -- Matching Blizzard's PVPHonorRewardTemplate: size 36x36, ring 48x48 at BOTTOM 0, -1
     local rankBadge = CreateFrame("Frame", "OnePanel_PvPRankBadge", emblemFrame)
     rankBadge:SetSize(36, 36)
-    rankBadge:SetPoint("BOTTOM", emblemFrame, "BOTTOM", 0, 4)
+    rankBadge:SetPoint("BOTTOM", emblemFrame, "BOTTOM", 0, -1)
 
     -- Dark circular backing for rank badge
     local rankBadgeBacking = rankBadge:CreateTexture(nil, "BACKGROUND")
@@ -535,7 +543,7 @@ local function CreatePvPView(parentFrame)
 
     -- Rank Points Text (e.g. "Rank Points: 0 / 750")
     local rankPointsLabel = leftArea:CreateFontString(nil, "OVERLAY")
-    rankPointsLabel:SetPoint("TOP", emblemFrame, "BOTTOM", 0, -10)
+    rankPointsLabel:SetPoint("TOP", emblemFrame, "BOTTOM", 0, -26)
     rankPointsLabel:SetFont(GetStandardFont(), 14, "")
     rankPointsLabel:SetShadowOffset(1, -1)
     rankPointsLabel:SetShadowColor(0, 0, 0, 1)
