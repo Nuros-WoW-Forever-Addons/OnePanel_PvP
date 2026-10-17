@@ -7,7 +7,7 @@
 ## 🎯 Overview & Scope
 
 - **Addon Name**: OnePanel_PvP
-- **Current Version**: 0.0.1
+- **Current Version**: 0.0.2
 - **Suite**: Part of the **OneSuite** family (OnePanel Plugin)
 - **GitHub Repository**:
   - Exists: TRUE
@@ -65,6 +65,13 @@ When picking up development on this addon:
 
 ## ✅ Recent Completed Work (Latest Spins)
 
+### Spin 0.0.2 (Layout Alignment & Milestone Arrow Navigation)
+- **Blizzard-Authentic Centerpiece**: Removed heavy combat performance button headers and multiline text blocks from the left area, allowing the Alliance/Horde crest, outer metallic ring, and bottom rank badge to center vertically with authentic proportions matching native WoW Forever.
+- **Rank Badge Medallion Fix**: Anchored the golden coin badge cleanly to the bottom rim of the outer bezel without square clipping or black background artifacts.
+- **Rewards Navigation Row**: Replaced the clickable red button in the drawer with a non-clickable etched header banner flanked by left (`<`) and right (`>`) arrow buttons for cycling rank rewards from Rank 1 to Rank 14.
+- **Item Slot Sizing & Alignment**: Corrected item icon (40x40) and quickslot border (42x42) geometry, aligning the title horizontally with the icon center.
+- **Honor & Performance Tooltip**: Integrated detailed PvP combat metrics (Today, Yesterday, This Week, Lifetime HKs/DKs, Highest Rank) into an interactive hover tooltip on the gradient Rank Points bar, with a sleek 1-line career footer.
+
 ### Spin 0.0.1 (Initial Release)
 - Initial addon scaffolding and repository creation.
 - Docked into OnePanel as Tab 4 (`order = 40`, golden fist icon).
@@ -79,10 +86,9 @@ When picking up development on this addon:
 
 ### Priority 1: High Priority (Immediate Next Spin)
 - [ ] **Battleground Stats Integration**: Quick glance win/loss record for Warsong Gulch, Arathi Basin, and Alterac Valley.
-- [ ] **Rank Milestone Selector**: Interactive rank slider or button group in the drawer to preview rewards for any rank from Rank 1 to Rank 14.
+- [ ] **Honor Calculator / Est. Weekly Gain**: Estimate the player's rank point gain for the upcoming Tuesday/weekly reset based on accumulated honor.
 
 ### Priority 2: Medium Priority (Enhancements)
-- [ ] **Honor Calculator / Est. Weekly Gain**: Estimate the player's rank point gain for the upcoming Tuesday/weekly reset based on accumulated honor.
 - [ ] **PvP Equipment Sets Inspector**: Visual dress-up preview of full PvP armor sets for the player's class.
 
 ---

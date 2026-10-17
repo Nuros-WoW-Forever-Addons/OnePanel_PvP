@@ -416,7 +416,7 @@ local function CreatePvPView(parentFrame)
     local inspectedRank = nil -- Currently previewed reward rank in subpanel (defaults to next rank)
 
     ---------------------------------------------------------------------------
-    -- Left Area: Faction Crest, Rank Points, and Performance Matrix
+    -- Left Area: Faction Crest Centerpiece, Rank Points, and Performance Hover
     ---------------------------------------------------------------------------
 
     local leftArea = CreateFrame("Frame", "OnePanel_PvPLeftArea", container)
@@ -427,7 +427,7 @@ local function CreatePvPView(parentFrame)
 
     -- Top Rank Title (Center Stage, 17pt Friz Quadrata)
     local rankTitle = leftArea:CreateFontString(nil, "OVERLAY")
-    rankTitle:SetPoint("TOP", leftArea, "TOP", 0, -48)
+    rankTitle:SetPoint("TOP", leftArea, "TOP", 0, -42)
     rankTitle:SetFont(GetStandardFont(), 17, "")
     rankTitle:SetTextColor(1, 1, 1, 1)
     rankTitle:SetShadowOffset(1, -1)
@@ -435,57 +435,61 @@ local function CreatePvPView(parentFrame)
     rankTitle:SetText("Civilian")
     leftArea.RankTitle = rankTitle
 
-    -- Faction Crest & Circular Emblem Container
+    -- Subtle horizontal accent line below title
+    local titleDivider = leftArea:CreateTexture(nil, "ARTWORK")
+    titleDivider:SetSize(180, 1)
+    titleDivider:SetPoint("TOP", rankTitle, "BOTTOM", 0, -8)
+    titleDivider:SetColorTexture(0.35, 0.35, 0.35, 0.45)
+
+    -- Faction Crest & Circular Emblem Container (Centerpiece)
     local emblemFrame = CreateFrame("Frame", "OnePanel_PvPEmblemFrame", leftArea)
-    emblemFrame:SetSize(160, 160)
-    emblemFrame:SetPoint("TOP", rankTitle, "BOTTOM", 0, -6)
+    emblemFrame:SetSize(140, 140)
+    emblemFrame:SetPoint("TOP", rankTitle, "BOTTOM", 0, -18)
 
-    -- Background Shadow / Flourish Wings
+    -- Background Circular Dark Medallion Disk
     local emblemBg = emblemFrame:CreateTexture(nil, "BACKGROUND")
-    emblemBg:SetSize(190, 190)
-    emblemBg:SetPoint("CENTER", emblemFrame, "CENTER", 0, 2)
+    emblemBg:SetSize(140, 140)
+    emblemBg:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
     emblemBg:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
-    emblemBg:SetVertexColor(0.05, 0.05, 0.07, 0.95)
+    emblemBg:SetVertexColor(0.04, 0.04, 0.06, 0.95)
     emblemFrame.Bg = emblemBg
-
-    -- Outer Metallic Ring / Bezel
-    local emblemRing = emblemFrame:CreateTexture(nil, "BORDER")
-    emblemRing:SetSize(144, 144)
-    emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, 2)
-    if SafeHasAtlas("pvpqueue-crest-alliance") then
-        emblemRing:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-        emblemRing:SetVertexColor(0.5, 0.5, 0.55, 1)
-    else
-        emblemRing:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-        emblemRing:SetVertexColor(0.65, 0.65, 0.70, 1)
-    end
-    emblemFrame.Ring = emblemRing
 
     -- Faction Crest Icon (Alliance Lion / Horde Wolf)
     local emblemIcon = emblemFrame:CreateTexture(nil, "ARTWORK")
-    emblemIcon:SetSize(88, 88)
-    emblemIcon:SetPoint("CENTER", emblemFrame, "CENTER", 0, 6)
+    emblemIcon:SetSize(96, 96)
+    emblemIcon:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
     emblemIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
     emblemFrame.Icon = emblemIcon
 
-    -- Bottom Rank Number Medallion (Circular golden coin badge at bottom of ring)
+    -- Outer Metallic Ring / Bezel
+    local emblemRing = emblemFrame:CreateTexture(nil, "BORDER")
+    emblemRing:SetSize(140, 140)
+    emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
+    emblemRing:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+    emblemRing:SetVertexColor(0.65, 0.65, 0.70, 1)
+    emblemFrame.Ring = emblemRing
+
+    -- Bottom Rank Number Medallion (Circular golden coin badge anchored to bottom rim)
     local rankBadge = CreateFrame("Frame", nil, emblemFrame)
-    rankBadge:SetSize(36, 36)
-    rankBadge:SetPoint("BOTTOM", emblemFrame, "BOTTOM", 0, 4)
+    rankBadge:SetSize(32, 32)
+    rankBadge:SetPoint("CENTER", emblemRing, "BOTTOM", 0, 0)
 
-    local rankBadgeBg = rankBadge:CreateTexture(nil, "BACKGROUND")
-    rankBadgeBg:SetAllPoints(rankBadge)
-    rankBadgeBg:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-    rankBadgeBg:SetVertexColor(1, 0.85, 0.2, 1)
+    -- Dark circular background for rank badge (NO square color texture)
+    local rankBadgeBacking = rankBadge:CreateTexture(nil, "BACKGROUND")
+    rankBadgeBacking:SetSize(24, 24)
+    rankBadgeBacking:SetPoint("CENTER", rankBadge, "CENTER", 0, 0)
+    rankBadgeBacking:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+    rankBadgeBacking:SetVertexColor(0.06, 0.06, 0.08, 0.95)
 
-    local rankBadgeFill = rankBadge:CreateTexture(nil, "BORDER")
-    rankBadgeFill:SetSize(26, 26)
-    rankBadgeFill:SetPoint("CENTER", rankBadge, "CENTER", 0, 0)
-    rankBadgeFill:SetColorTexture(0.08, 0.08, 0.10, 0.95)
+    -- Circular Golden Bezel for rank badge
+    local rankBadgeBorder = rankBadge:CreateTexture(nil, "BORDER")
+    rankBadgeBorder:SetAllPoints(rankBadge)
+    rankBadgeBorder:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+    rankBadgeBorder:SetVertexColor(1, 0.85, 0.2, 1)
 
     local rankBadgeText = rankBadge:CreateFontString(nil, "OVERLAY")
     rankBadgeText:SetPoint("CENTER", rankBadge, "CENTER", 0, 0)
-    rankBadgeText:SetFont(GetStandardFont(), 15, "")
+    rankBadgeText:SetFont(GetStandardFont(), 14, "")
     rankBadgeText:SetTextColor(1, 0.85, 0.1, 1)
     rankBadgeText:SetShadowOffset(1, -1)
     rankBadgeText:SetShadowColor(0, 0, 0, 1)
@@ -494,8 +498,8 @@ local function CreatePvPView(parentFrame)
 
     -- Rank Points Text (e.g. "Rank Points: 0 / 750")
     local rankPointsLabel = leftArea:CreateFontString(nil, "OVERLAY")
-    rankPointsLabel:SetPoint("TOP", emblemFrame, "BOTTOM", 0, -4)
-    rankPointsLabel:SetFont(GetStandardFont(), 13, "")
+    rankPointsLabel:SetPoint("TOP", emblemFrame, "BOTTOM", 0, -14)
+    rankPointsLabel:SetFont(GetStandardFont(), 14, "")
     rankPointsLabel:SetShadowOffset(1, -1)
     rankPointsLabel:SetShadowColor(0, 0, 0, 1)
     rankPointsLabel:SetText("|cffffcc00Rank Points:|r |cffffffff0 / 750|r")
@@ -503,8 +507,8 @@ local function CreatePvPView(parentFrame)
 
     -- Modern Gradient Rank Points Progress Bar
     local rankPointsBar = CreateFrame("StatusBar", "OnePanel_PvPRankPointsBar", leftArea)
-    rankPointsBar:SetSize(288, 20)
-    rankPointsBar:SetPoint("TOP", rankPointsLabel, "BOTTOM", 0, -6)
+    rankPointsBar:SetSize(240, 18)
+    rankPointsBar:SetPoint("TOP", rankPointsLabel, "BOTTOM", 0, -8)
 
     local barBg = rankPointsBar:CreateTexture(nil, "BACKGROUND", nil, -2)
     barBg:SetAllPoints(rankPointsBar)
@@ -526,7 +530,7 @@ local function CreatePvPView(parentFrame)
     rankPointsBar.Border = barBorder
 
     local barSpark = rankPointsBar:CreateTexture(nil, "OVERLAY", nil, 2)
-    barSpark:SetSize(8, 20)
+    barSpark:SetSize(8, 18)
     if SafeHasAtlas("ui-castingbar-pip") then
         barSpark:SetAtlas("ui-castingbar-pip")
     else
@@ -545,60 +549,47 @@ local function CreatePvPView(parentFrame)
     rankPointsBar.Text = barText
     leftArea.RankPointsBar = rankPointsBar
 
-    -- Performance Matrix Scroll Area / Container
-    local statsContainer = CreateFrame("Frame", "OnePanel_PvPStatsContainer", leftArea)
-    statsContainer:SetPoint("TOPLEFT", rankPointsBar, "BOTTOMLEFT", 0, -10)
-    statsContainer:SetPoint("BOTTOMRIGHT", leftArea, "BOTTOMRIGHT", -12, 10)
+    -- Cached PvP data for hover tooltip
+    local cachedPvPData = nil
 
-    -- Card 1: Today & Yesterday
-    local sessionHeader = CreateFrame("Button", nil, statsContainer, "UIPanelButtonTemplate")
-    sessionHeader:SetPoint("TOPLEFT", statsContainer, "TOPLEFT", 0, 0)
-    sessionHeader:SetPoint("TOPRIGHT", statsContainer, "TOPRIGHT", 0, 0)
-    sessionHeader:SetHeight(24)
-    sessionHeader:Disable()
-    local shFont = sessionHeader:GetFontString()
-    if shFont then
-        shFont:SetFont(GetStandardFont(), 12, "")
-        shFont:SetTextColor(1, 0.85, 0.1, 1)
-        shFont:SetShadowOffset(1, -1)
-        shFont:SetShadowColor(0, 0, 0, 1)
-    end
-    sessionHeader:SetText("Recent Combat Performance")
+    -- Interactive Tooltip on the Progress Bar (Honor & Combat Performance details)
+    rankPointsBar:EnableMouse(true)
+    rankPointsBar:SetScript("OnEnter", function(self)
+        if not cachedPvPData then return end
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText("Honor & Combat Performance", 1, 0.82, 0, 1)
+        GameTooltip:AddLine(" ", 1, 1, 1)
 
-    local sessionStatsText = statsContainer:CreateFontString(nil, "OVERLAY")
-    sessionStatsText:SetPoint("TOPLEFT", sessionHeader, "BOTTOMLEFT", 6, -6)
-    sessionStatsText:SetPoint("TOPRIGHT", sessionHeader, "BOTTOMRIGHT", -6, -6)
-    sessionStatsText:SetJustifyH("LEFT")
-    sessionStatsText:SetFont(GetStandardFont(), 13, "")
-    sessionStatsText:SetSpacing(3)
-    sessionStatsText:SetShadowOffset(1, -1)
-    sessionStatsText:SetShadowColor(0, 0, 0, 1)
-    statsContainer.SessionStatsText = sessionStatsText
+        GameTooltip:AddDoubleLine("Today's HKs:", FormatNumber(cachedPvPData.todayHK), 0.8, 0.8, 0.8, 1, 1, 1)
+        GameTooltip:AddDoubleLine("Today's Honor:", FormatNumber(cachedPvPData.todayHonor), 0.8, 0.8, 0.8, 1, 1, 1)
+        GameTooltip:AddLine(" ", 1, 1, 1)
 
-    -- Card 2: This Week & Lifetime
-    local lifetimeHeader = CreateFrame("Button", nil, statsContainer, "UIPanelButtonTemplate")
-    lifetimeHeader:SetPoint("TOPLEFT", sessionStatsText, "BOTTOMLEFT", -6, -8)
-    lifetimeHeader:SetPoint("TOPRIGHT", sessionStatsText, "BOTTOMRIGHT", 6, -8)
-    lifetimeHeader:SetHeight(24)
-    lifetimeHeader:Disable()
-    local lhFont = lifetimeHeader:GetFontString()
-    if lhFont then
-        lhFont:SetFont(GetStandardFont(), 12, "")
-        lhFont:SetTextColor(1, 0.85, 0.1, 1)
-        lhFont:SetShadowOffset(1, -1)
-        lhFont:SetShadowColor(0, 0, 0, 1)
-    end
-    lifetimeHeader:SetText("Honor Standing & Career Records")
+        GameTooltip:AddDoubleLine("Yesterday's HKs:", FormatNumber(cachedPvPData.yesterdayHK), 0.8, 0.8, 0.8, 1, 1, 1)
+        GameTooltip:AddDoubleLine("Yesterday's Honor:", FormatNumber(cachedPvPData.yesterdayHonor), 0.8, 0.8, 0.8, 1, 1, 1)
+        GameTooltip:AddLine(" ", 1, 1, 1)
 
-    local lifetimeStatsText = statsContainer:CreateFontString(nil, "OVERLAY")
-    lifetimeStatsText:SetPoint("TOPLEFT", lifetimeHeader, "BOTTOMLEFT", 6, -6)
-    lifetimeStatsText:SetPoint("TOPRIGHT", lifetimeHeader, "BOTTOMRIGHT", -6, -6)
-    lifetimeStatsText:SetJustifyH("LEFT")
-    lifetimeStatsText:SetFont(GetStandardFont(), 13, "")
-    lifetimeStatsText:SetSpacing(3)
-    lifetimeStatsText:SetShadowOffset(1, -1)
-    lifetimeStatsText:SetShadowColor(0, 0, 0, 1)
-    statsContainer.LifetimeStatsText = lifetimeStatsText
+        GameTooltip:AddDoubleLine("This Week's HKs:", FormatNumber(cachedPvPData.thisWeekHK), 0.8, 0.8, 0.8, 1, 1, 1)
+        GameTooltip:AddDoubleLine("This Week's Honor:", FormatNumber(cachedPvPData.thisWeekHonor), 0.8, 0.8, 0.8, 1, 1, 1)
+        GameTooltip:AddLine(" ", 1, 1, 1)
+
+        GameTooltip:AddDoubleLine("Lifetime HKs:", FormatNumber(cachedPvPData.lifetimeHK), 0.8, 0.8, 0.8, 1, 1, 1)
+        GameTooltip:AddDoubleLine("Highest Rank:", string.format("%s (Rank %d)", cachedPvPData.highestRankTitle, cachedPvPData.highestRank), 0.8, 0.8, 0.8, 1, 0.82, 0)
+        if cachedPvPData.lifetimeDK > 0 then
+            GameTooltip:AddDoubleLine("Dishonorable Kills:", FormatNumber(cachedPvPData.lifetimeDK), 0.8, 0.8, 0.8, 1, 0.2, 0.2)
+        end
+
+        GameTooltip:Show()
+    end)
+    rankPointsBar:SetScript("OnLeave", function() GameTooltip_Hide() end)
+
+    -- Subtle 1-Line Career Record Footer (Uncluttered, matches Blizzard frame aesthetics)
+    local careerFooter = leftArea:CreateFontString(nil, "OVERLAY")
+    careerFooter:SetPoint("BOTTOM", leftArea, "BOTTOM", 0, 14)
+    careerFooter:SetFont(GetStandardFont(), 12, "")
+    careerFooter:SetShadowOffset(1, -1)
+    careerFooter:SetShadowColor(0, 0, 0, 1)
+    careerFooter:SetText("|cff888888Lifetime HKs:|r |cffffffff0|r     |cff888888Highest Rank:|r |cffffcc00Civilian|r")
+    leftArea.CareerFooter = careerFooter
 
     ---------------------------------------------------------------------------
     -- Right Area: Collapsible Side Details Panel
@@ -687,21 +678,21 @@ local function CreatePvPView(parentFrame)
     -- Sub-Panel Details Widgets (Matching WoW Forever In-Game PvP Layout)
     ---------------------------------------------------------------------------
 
-    -- Detail Header: Rank Title (17pt Friz Quadrata gold, centered)
+    -- Detail Header: Rank Title (17pt Friz Quadrata light gold/white, centered)
     local detailHeader = subPanel:CreateFontString(nil, "OVERLAY")
-    detailHeader:SetPoint("TOPLEFT", subPanel, "TOPLEFT", 6, -10)
-    detailHeader:SetPoint("TOPRIGHT", subPanel, "TOPRIGHT", -6, -10)
+    detailHeader:SetPoint("TOPLEFT", subPanel, "TOPLEFT", 6, -14)
+    detailHeader:SetPoint("TOPRIGHT", subPanel, "TOPRIGHT", -6, -14)
     detailHeader:SetJustifyH("CENTER")
     detailHeader:SetFont(GetStandardFont(), 17, "")
-    detailHeader:SetTextColor(1, 0.82, 0, 1)
+    detailHeader:SetTextColor(1, 0.9, 0.6, 1)
     detailHeader:SetShadowOffset(1, -1)
     detailHeader:SetShadowColor(0, 0, 0, 1)
     subPanel.DetailHeader = detailHeader
 
     -- Cap Explanation Paragraph (13pt Friz Quadrata, spacing 3)
     local capExplanation = subPanel:CreateFontString(nil, "OVERLAY")
-    capExplanation:SetPoint("TOPLEFT", detailHeader, "BOTTOMLEFT", 4, -10)
-    capExplanation:SetPoint("TOPRIGHT", detailHeader, "BOTTOMRIGHT", -4, -10)
+    capExplanation:SetPoint("TOPLEFT", subPanel, "TOPLEFT", 10, -44)
+    capExplanation:SetPoint("TOPRIGHT", subPanel, "TOPRIGHT", -10, -44)
     capExplanation:SetJustifyH("LEFT")
     capExplanation:SetWordWrap(true)
     capExplanation:SetFont(GetStandardFont(), 13, "")
@@ -712,39 +703,89 @@ local function CreatePvPView(parentFrame)
     capExplanation:SetText("Each week, the Rank Points cap is increased, up to a maximum of 24750 for Rank 14.")
     subPanel.CapExplanation = capExplanation
 
-    -- Milestone Rewards Button Banner (Clickable to browse upcoming ranks 1..14)
-    local rewardsButton = CreateFrame("Button", "OnePanel_PvPNextRewardBtn", subPanel, "UIPanelButtonTemplate")
-    rewardsButton:SetPoint("TOPLEFT", capExplanation, "BOTTOMLEFT", 0, -18)
-    rewardsButton:SetPoint("TOPRIGHT", capExplanation, "BOTTOMRIGHT", 0, -18)
-    rewardsButton:SetHeight(28)
-    local rbFont = rewardsButton:GetFontString()
-    if rbFont then
-        rbFont:SetFont(GetStandardFont(), 13, "")
-        rbFont:SetTextColor(1, 0.85, 0.1, 1)
-        rbFont:SetShadowOffset(1, -1)
-        rbFont:SetShadowColor(0, 0, 0, 1)
-    end
-    rewardsButton:SetText("Next Rewards at Rank 1")
-    subPanel.RewardsButton = rewardsButton
+    -- Milestone Rewards Navigation Row (Left/Right Arrows + Non-clickable Banner Plate)
+    local rewardsNav = CreateFrame("Frame", "OnePanel_PvPRewardsNav", subPanel)
+    rewardsNav:SetPoint("TOPLEFT", capExplanation, "BOTTOMLEFT", -2, -18)
+    rewardsNav:SetPoint("TOPRIGHT", capExplanation, "BOTTOMRIGHT", 2, -18)
+    rewardsNav:SetHeight(28)
+    subPanel.RewardsNav = rewardsNav
+
+    -- Previous Rank Arrow Button (<)
+    local prevBtn = CreateFrame("Button", "OnePanel_PvPPrevRewardBtn", rewardsNav)
+    prevBtn:SetSize(22, 22)
+    prevBtn:SetPoint("LEFT", rewardsNav, "LEFT", 0, 0)
+    prevBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookSearch-PrevPage-Up")
+    prevBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookSearch-PrevPage-Down")
+    prevBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookSearch-PrevPage-Disabled")
+    prevBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+    rewardsNav.PrevBtn = prevBtn
+
+    -- Next Rank Arrow Button (>)
+    local nextBtn = CreateFrame("Button", "OnePanel_PvPNextRewardBtn", rewardsNav)
+    nextBtn:SetSize(22, 22)
+    nextBtn:SetPoint("RIGHT", rewardsNav, "RIGHT", 0, 0)
+    nextBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookSearch-NextPage-Up")
+    nextBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookSearch-NextPage-Down")
+    nextBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookSearch-NextPage-Disabled")
+    nextBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+    rewardsNav.NextBtn = nextBtn
+
+    -- Center Banner Plate (Frame, non-clickable display plate matching Blizzard etched header style)
+    local banner = CreateFrame("Frame", nil, rewardsNav, "BackdropTemplate")
+    banner:SetPoint("LEFT", prevBtn, "RIGHT", 4, 0)
+    banner:SetPoint("RIGHT", nextBtn, "LEFT", -4, 0)
+    banner:SetHeight(26)
+    banner:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = false,
+        tileSize = 0,
+        edgeSize = 10,
+        insets = { left = 2, right = 2, top = 2, bottom = 2 },
+    })
+    banner:SetBackdropColor(0.08, 0.08, 0.10, 0.90)
+    banner:SetBackdropBorderColor(0.40, 0.35, 0.28, 0.85)
+
+    local bannerText = banner:CreateFontString(nil, "OVERLAY")
+    bannerText:SetPoint("CENTER", banner, "CENTER", 0, 0)
+    bannerText:SetFont(GetStandardFont(), 12, "")
+    bannerText:SetTextColor(1, 0.85, 0.2, 1)
+    bannerText:SetShadowOffset(1, -1)
+    bannerText:SetShadowColor(0, 0, 0, 1)
+    bannerText:SetText("Next Rewards at Rank 1")
+    banner.Text = bannerText
+    rewardsNav.Banner = banner
+
+    -- Arrow Click Navigation Handlers
+    prevBtn:SetScript("OnClick", function()
+        inspectedRank = math.max(1, (inspectedRank or 1) - 1)
+        if container.Refresh then container:Refresh() end
+    end)
+
+    nextBtn:SetScript("OnClick", function()
+        inspectedRank = math.min(14, (inspectedRank or 1) + 1)
+        if container.Refresh then container:Refresh() end
+    end)
 
     -- Reward Item Container Card
     local rewardCard = CreateFrame("Frame", nil, subPanel)
-    rewardCard:SetPoint("TOPLEFT", rewardsButton, "BOTTOMLEFT", 0, -14)
-    rewardCard:SetPoint("TOPRIGHT", rewardsButton, "BOTTOMRIGHT", 0, -14)
-    rewardCard:SetHeight(52)
+    rewardCard:SetPoint("TOPLEFT", rewardsNav, "BOTTOMLEFT", 0, -14)
+    rewardCard:SetPoint("TOPRIGHT", rewardsNav, "BOTTOMRIGHT", 0, -14)
+    rewardCard:SetHeight(48)
 
     -- Item Icon Frame (With metallic border)
     local rewardItemIcon = CreateFrame("Button", nil, rewardCard)
-    rewardItemIcon:SetSize(42, 42)
-    rewardItemIcon:SetPoint("LEFT", rewardCard, "LEFT", 2, 0)
+    rewardItemIcon:SetSize(40, 40)
+    rewardItemIcon:SetPoint("LEFT", rewardCard, "LEFT", 4, 0)
 
     local iconTex = rewardItemIcon:CreateTexture(nil, "ARTWORK")
-    iconTex:SetAllPoints(rewardItemIcon)
+    iconTex:SetSize(38, 38)
+    iconTex:SetPoint("CENTER", rewardItemIcon, "CENTER", 0, 0)
     iconTex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
     rewardItemIcon.Texture = iconTex
 
     local iconBorder = rewardItemIcon:CreateTexture(nil, "OVERLAY")
-    iconBorder:SetSize(64, 64)
+    iconBorder:SetSize(42, 42)
     iconBorder:SetPoint("CENTER", rewardItemIcon, "CENTER", 0, 0)
     iconBorder:SetTexture("Interface\\Buttons\\UI-Quickslot2")
     rewardItemIcon.Border = iconBorder
@@ -776,20 +817,13 @@ local function CreatePvPView(parentFrame)
     quartermasterText:SetShadowColor(0, 0, 0, 1)
     subPanel.QuartermasterText = quartermasterText
 
-    -- Interactive Milestone Navigation: Clicking the button cycles to preview next ranks!
-    rewardsButton:SetScript("OnClick", function()
-        local nextPreview = (inspectedRank or 1) + 1
-        if nextPreview > 14 then nextPreview = 1 end
-        inspectedRank = nextPreview
-        if container.Refresh then container:Refresh() end
-    end)
-
     ---------------------------------------------------------------------------
     -- Master Refresh Engine
     ---------------------------------------------------------------------------
 
     local function Refresh()
         local data = SafeGetPvPData()
+        cachedPvPData = data
 
         -- Left Area Updates
         rankTitle:SetText(data.rankName)
@@ -820,23 +854,12 @@ local function CreatePvPView(parentFrame)
             barText:SetText(string.format("%s / %s (%d%%)", FormatNumber(curPts), FormatNumber(maxPts), pct))
         end
 
-        -- Performance Matrix Texts
-        sessionStatsText:SetText(string.format(
-            "|cffccccccToday's HKs:|r |cffffffff%s|r     |cffccccccHonor:|r |cffffffff%s|r\n" ..
-            "|cffccccccYesterday HKs:|r |cffffffff%s|r  |cffccccccHonor:|r |cffffffff%s|r",
-            FormatNumber(data.todayHK), FormatNumber(data.todayHonor),
-            FormatNumber(data.yesterdayHK), FormatNumber(data.yesterdayHonor)
-        ))
-
-        lifetimeStatsText:SetText(string.format(
-            "|cffccccccThis Week HKs:|r |cffffffff%s|r  |cffccccccHonor:|r |cffffffff%s|r\n" ..
-            "|cffccccccLifetime HKs:|r  |cffffffff%s|r\n" ..
-            "|cffccccccHighest Rank:|r  |cffffcc00%s (Rank %d)|r\n" ..
-            "|cffccccccDishonorable Kills:|r %s",
-            FormatNumber(data.thisWeekHK), FormatNumber(data.thisWeekHonor),
+        -- Career Footer
+        careerFooter:SetText(string.format(
+            "|cff888888Lifetime HKs:|r |cffffffff%s|r     |cff888888Highest Rank:|r |cffffcc00%s (Rank %d)|r",
             FormatNumber(data.lifetimeHK),
-            data.highestRankTitle, data.highestRank,
-            (data.lifetimeDK > 0) and ("|cffff3333" .. FormatNumber(data.lifetimeDK) .. "|r") or "|cff00e6b30|r"
+            data.highestRankTitle,
+            data.highestRank
         ))
 
         -- SubPanel Updates
@@ -850,7 +873,15 @@ local function CreatePvPView(parentFrame)
         local previewInfo = PVP_RANKS[inspectedRank] or PVP_RANKS[1]
         local previewTitle = data.isAlliance and previewInfo.allianceTitle or previewInfo.hordeTitle
 
-        rewardsButton:SetText(string.format("Rewards at Rank %d (%s)", inspectedRank, previewTitle))
+        -- Update Banner Plate Text and Arrow Button States
+        if inspectedRank == (data.currentRank + 1) then
+            banner.Text:SetText(string.format("Next Rewards at Rank %d", inspectedRank))
+        else
+            banner.Text:SetText(string.format("Rewards at Rank %d", inspectedRank))
+        end
+
+        prevBtn:SetEnabled(inspectedRank > 1)
+        nextBtn:SetEnabled(inspectedRank < 14)
 
         local rewardIcon = data.isAlliance and previewInfo.rewardIconAlliance or previewInfo.rewardIconHorde
         iconTex:SetTexture(rewardIcon or "Interface\\Icons\\INV_Misc_QuestionMark")

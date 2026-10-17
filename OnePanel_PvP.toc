@@ -2,7 +2,7 @@
 ## Title: OnePanel |cff00ccffPlayer vs. Player|r
 ## Notes: Military rank, honor points, and PvP rewards tracking plugin for OnePanel Suite.
 ## Author: OnePanel Suite Team
-## Version: 0.0.1
+## Version: 0.0.2
 ## IconTexture: Interface\Icons\Spell_Holy_FistOfJustice
 ## Dependencies: OnePanel, OnePanelUtils
 
