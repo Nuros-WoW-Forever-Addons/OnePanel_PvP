@@ -65,11 +65,18 @@ When picking up development on this addon:
 
 ## ✅ Recent Completed Work (Latest Spins)
 
-### Spin 0.0.2 (Layout Alignment & Milestone Arrow Navigation)
-- **Blizzard-Authentic Centerpiece**: Removed heavy combat performance button headers and multiline text blocks from the left area, allowing the Alliance/Horde crest, outer metallic ring, and bottom rank badge to center vertically with authentic proportions matching native WoW Forever.
-- **Rank Badge Medallion Fix**: Anchored the golden coin badge cleanly to the bottom rim of the outer bezel without square clipping or black background artifacts.
-- **Rewards Navigation Row**: Replaced the clickable red button in the drawer with a non-clickable etched header banner flanked by left (`<`) and right (`>`) arrow buttons for cycling rank rewards from Rank 1 to Rank 14.
-- **Item Slot Sizing & Alignment**: Corrected item icon (40x40) and quickslot border (42x42) geometry, aligning the title horizontally with the icon center.
+### Spin 0.0.2 (Blizzard Native UI Atlases, Exact Centering & Banner Fitting)
+- **Native Blizzard UI Atlas Extraction**: Inspected `Blizzard_UIPanels_Game/Camelot/PVPRankFrame` and `CharacterFrame` and adopted the exact native graphics:
+  - `UI-Character-Info-Honor-RewardRing`: Perfectly concentric circular golden coin ring, permanently resolving the off-center rank number bug caused by `MiniMap-TrackingBorder`.
+  - `UI-Character-Info-Title`: Authentic 192x36 carved header plate for the milestone rewards navigation row.
+  - `UI-Character-Info-Honor-Bar`: Authentic metallic dragon-wing bezel ring.
+  - `UI-Character-Info-Honor-Bar-BG-Alliance` / `-Horde`: Circular faction background disk.
+  - `UI-Character-Info-Honor-Bar-BG-Glow`: Soft radial backlight glow behind the centerpiece emblem.
+  - `UI-Character-Info-Honor-Icon-Alliance` / `-Horde` / `UI-Character-Info-Honor-Icon-%d`: Native military rank and faction badges.
+  - `UI-Character-Info-GearSlot`: Authentic item reward slot container.
+  - `UI-Character-Info-Honor-LevelBG`: Ornamental horizontal line under the rank title.
+- **Side Panel Banner Text Fitting**: Replaced the clickable red button with a 192px wide `UI-Character-Info-Title` header plate, embedding left (`<`) and right (`>`) arrow buttons on the outer ends. Set typography to 11pt `GameFontNormal` so `"Next Rewards at Rank 1"` fits cleanly within the 150px space without overflowing.
+- **Rank Number Centering**: Placed the rank number fontstring at optical center `(0, 1)` inside the concentric `UI-Character-Info-Honor-RewardRing` with dark circle mask backing.
 - **Honor & Performance Tooltip**: Integrated detailed PvP combat metrics (Today, Yesterday, This Week, Lifetime HKs/DKs, Highest Rank) into an interactive hover tooltip on the gradient Rank Points bar, with a sleek 1-line career footer.
 
 ### Spin 0.0.1 (Initial Release)

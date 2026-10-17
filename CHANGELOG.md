@@ -9,11 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.2] - 2026-10-17
 ### Changed
-- **Blizzard Authentic Centerpiece Layout**: Removed bulky combat performance buttons from the left area, allowing the faction crest medallion and outer metallic ring to center vertically matching the native WoW Forever frame.
-- **Rank Badge Medallion Refinement**: Positioned the golden rank coin directly on the bottom rim of the outer bezel without harsh square background clipping.
-- **Progress Bar Tooltip Integration**: Transferred combat performance stats (Today, Yesterday, This Week, Lifetime HKs/DKs) to an interactive mouseover tooltip on the modern gradient Rank Points bar, accompanied by a subtle 1-line career record footer at the bottom.
-- **Rewards Navigation Row**: Replaced the clickable red button on the details drawer with a non-clickable etched header banner flanked by left (`<`) and right (`>`) arrow buttons for cycling rank rewards 1 through 14.
-- **Item Slot Alignment**: Fixed item icon and border dimensions (40x40 icon, 42x42 quickslot border) ensuring clean visual alignment with the reward title.
+- **Native Blizzard UI Atlas Adoption**: Extracted and integrated the exact texture atlases from Blizzard's `PVPRankFrame` and `CharacterFrame` (Camelot UI):
+  - `UI-Character-Info-Honor-RewardRing`: Perfectly concentric circular golden coin ring, permanently resolving the off-center rank number defect caused by `MiniMap-TrackingBorder`.
+  - `UI-Character-Info-Title`: Full-width 192x36 carved header plate for the milestone rewards navigation row.
+  - `UI-Character-Info-Honor-Bar`: Authentic metallic dragon-wing bezel ring.
+  - `UI-Character-Info-Honor-Bar-BG-Alliance` / `-Horde`: Circular faction background disc.
+  - `UI-Character-Info-Honor-Bar-BG-Glow`: Soft radial backlight glow behind the centerpiece emblem.
+  - `UI-Character-Info-Honor-Icon-Alliance` / `-Horde` / `UI-Character-Info-Honor-Icon-%d`: Native military rank and faction badges.
+  - `UI-Character-Info-GearSlot`: Authentic item reward slot container.
+  - `UI-Character-Info-Honor-LevelBG`: Ornamental horizontal line under the rank title.
+- **Side Panel Banner Text Fitting**: Integrated left (`<`) and right (`>`) arrow buttons into the outer edges of the 192px wide `UI-Character-Info-Title` banner plate, scaling title typography to 11pt `GameFontNormal` so `"Next Rewards at Rank 1"` fits cleanly with generous breathing room.
+- **Rank Number Geometric Centering**: Optical centering at `(0, 1)` inside the concentric `UI-Character-Info-Honor-RewardRing` with circular alpha mask backing.
+- **Progress Bar Tooltip Integration**: Detailed combat performance breakdown (Today, Yesterday, This Week, Lifetime HKs/DKs, Highest Rank) displayed in an interactive mouseover tooltip on the Rank Points progress bar.
 
 ## [0.0.1] - 2026-10-17
 ### Added

@@ -435,61 +435,98 @@ local function CreatePvPView(parentFrame)
     rankTitle:SetText("Civilian")
     leftArea.RankTitle = rankTitle
 
-    -- Subtle horizontal accent line below title
+    -- Blizzard Native Title Accent Line (atlas: UI-Character-Info-Honor-LevelBG)
     local titleDivider = leftArea:CreateTexture(nil, "ARTWORK")
-    titleDivider:SetSize(180, 1)
     titleDivider:SetPoint("TOP", rankTitle, "BOTTOM", 0, -8)
-    titleDivider:SetColorTexture(0.35, 0.35, 0.35, 0.45)
+    if SafeHasAtlas("UI-Character-Info-Honor-LevelBG") then
+        titleDivider:SetAtlas("UI-Character-Info-Honor-LevelBG", true)
+    else
+        titleDivider:SetSize(180, 1)
+        titleDivider:SetColorTexture(0.35, 0.35, 0.35, 0.45)
+    end
 
     -- Faction Crest & Circular Emblem Container (Centerpiece)
     local emblemFrame = CreateFrame("Frame", "OnePanel_PvPEmblemFrame", leftArea)
-    emblemFrame:SetSize(140, 140)
-    emblemFrame:SetPoint("TOP", rankTitle, "BOTTOM", 0, -18)
+    emblemFrame:SetSize(190, 170)
+    emblemFrame:SetPoint("TOP", rankTitle, "BOTTOM", 0, -14)
 
-    -- Background Circular Dark Medallion Disk
-    local emblemBg = emblemFrame:CreateTexture(nil, "BACKGROUND")
-    emblemBg:SetSize(140, 140)
+    -- Background Soft Glow (Blizzard atlas: UI-Character-Info-Honor-Bar-BG-Glow)
+    local emblemGlow = emblemFrame:CreateTexture(nil, "BACKGROUND", nil, -2)
+    emblemGlow:SetSize(230, 245)
+    emblemGlow:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
+    if SafeHasAtlas("UI-Character-Info-Honor-Bar-BG-Glow") then
+        emblemGlow:SetAtlas("UI-Character-Info-Honor-Bar-BG-Glow")
+    else
+        emblemGlow:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+        emblemGlow:SetVertexColor(0.04, 0.04, 0.06, 0.95)
+    end
+    emblemFrame.Glow = emblemGlow
+
+    -- Background Circular Disk (Blizzard atlas: UI-Character-Info-Honor-Bar-BG-Alliance / -Horde)
+    local emblemBg = emblemFrame:CreateTexture(nil, "BACKGROUND", nil, -1)
+    emblemBg:SetSize(115, 115)
     emblemBg:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
-    emblemBg:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
-    emblemBg:SetVertexColor(0.04, 0.04, 0.06, 0.95)
+    if SafeHasAtlas("UI-Character-Info-Honor-Bar-BG-Alliance") then
+        emblemBg:SetAtlas("UI-Character-Info-Honor-Bar-BG-Alliance", true)
+    else
+        emblemBg:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+        emblemBg:SetVertexColor(0.04, 0.04, 0.06, 0.95)
+    end
     emblemFrame.Bg = emblemBg
 
-    -- Faction Crest Icon (Alliance Lion / Horde Wolf)
+    -- Central Faction Crest / Rank Icon (Blizzard atlas: UI-Character-Info-Honor-Icon-Alliance / -Horde or -%d)
     local emblemIcon = emblemFrame:CreateTexture(nil, "ARTWORK")
-    emblemIcon:SetSize(96, 96)
+    emblemIcon:SetSize(72, 84)
     emblemIcon:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
-    emblemIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+    if SafeHasAtlas("UI-Character-Info-Honor-Icon-Alliance") then
+        emblemIcon:SetAtlas("UI-Character-Info-Honor-Icon-Alliance", true)
+    else
+        emblemIcon:SetSize(88, 88)
+        emblemIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+    end
     emblemFrame.Icon = emblemIcon
 
-    -- Outer Metallic Ring / Bezel
+    -- Outer Metallic Ring / Bezel with dragon/flourish wings (Blizzard atlas: UI-Character-Info-Honor-Bar)
     local emblemRing = emblemFrame:CreateTexture(nil, "BORDER")
-    emblemRing:SetSize(140, 140)
-    emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, 0)
-    emblemRing:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-    emblemRing:SetVertexColor(0.65, 0.65, 0.70, 1)
+    emblemRing:SetSize(190, 169)
+    emblemRing:SetPoint("CENTER", emblemFrame, "CENTER", 0, -1)
+    if SafeHasAtlas("UI-Character-Info-Honor-Bar") then
+        emblemRing:SetAtlas("UI-Character-Info-Honor-Bar")
+    else
+        emblemRing:SetSize(140, 140)
+        emblemRing:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+        emblemRing:SetVertexColor(0.65, 0.65, 0.70, 1)
+    end
     emblemFrame.Ring = emblemRing
 
     -- Bottom Rank Number Medallion (Circular golden coin badge anchored to bottom rim)
-    local rankBadge = CreateFrame("Frame", nil, emblemFrame)
-    rankBadge:SetSize(32, 32)
-    rankBadge:SetPoint("CENTER", emblemRing, "BOTTOM", 0, 0)
+    -- Matching Blizzard's PVPHonorRewardTemplate: size 36x36, ring 48x48
+    local rankBadge = CreateFrame("Frame", "OnePanel_PvPRankBadge", emblemFrame)
+    rankBadge:SetSize(36, 36)
+    rankBadge:SetPoint("BOTTOM", emblemFrame, "BOTTOM", 0, 4)
 
-    -- Dark circular background for rank badge (NO square color texture)
+    -- Dark circular backing for rank badge
     local rankBadgeBacking = rankBadge:CreateTexture(nil, "BACKGROUND")
-    rankBadgeBacking:SetSize(24, 24)
+    rankBadgeBacking:SetSize(28, 28)
     rankBadgeBacking:SetPoint("CENTER", rankBadge, "CENTER", 0, 0)
-    rankBadgeBacking:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
-    rankBadgeBacking:SetVertexColor(0.06, 0.06, 0.08, 0.95)
+    rankBadgeBacking:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
+    rankBadgeBacking:SetVertexColor(0.1, 0.1, 0.1, 1)
 
-    -- Circular Golden Bezel for rank badge
-    local rankBadgeBorder = rankBadge:CreateTexture(nil, "BORDER")
-    rankBadgeBorder:SetAllPoints(rankBadge)
-    rankBadgeBorder:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-    rankBadgeBorder:SetVertexColor(1, 0.85, 0.2, 1)
+    -- Circular Golden Ring (Blizzard atlas: UI-Character-Info-Honor-RewardRing, perfectly concentric)
+    local rankBadgeRing = rankBadge:CreateTexture(nil, "BORDER")
+    rankBadgeRing:SetSize(48, 48)
+    rankBadgeRing:SetPoint("CENTER", rankBadge, "CENTER", 0, 0)
+    if SafeHasAtlas("UI-Character-Info-Honor-RewardRing") then
+        rankBadgeRing:SetAtlas("UI-Character-Info-Honor-RewardRing")
+    else
+        rankBadgeRing:SetTexture("Interface\\AchievementFrame\\UI-Achievement-Guild-Ring")
+    end
+    rankBadge.Ring = rankBadgeRing
 
+    -- Rank Number Text (Center-aligned, perfectly centered in the concentric ring)
     local rankBadgeText = rankBadge:CreateFontString(nil, "OVERLAY")
-    rankBadgeText:SetPoint("CENTER", rankBadge, "CENTER", 0, 0)
-    rankBadgeText:SetFont(GetStandardFont(), 14, "")
+    rankBadgeText:SetPoint("CENTER", rankBadge, "CENTER", 0, 1)
+    rankBadgeText:SetFont(GetStandardFont(), 15, "")
     rankBadgeText:SetTextColor(1, 0.85, 0.1, 1)
     rankBadgeText:SetShadowOffset(1, -1)
     rankBadgeText:SetShadowColor(0, 0, 0, 1)
@@ -498,7 +535,7 @@ local function CreatePvPView(parentFrame)
 
     -- Rank Points Text (e.g. "Rank Points: 0 / 750")
     local rankPointsLabel = leftArea:CreateFontString(nil, "OVERLAY")
-    rankPointsLabel:SetPoint("TOP", emblemFrame, "BOTTOM", 0, -14)
+    rankPointsLabel:SetPoint("TOP", emblemFrame, "BOTTOM", 0, -10)
     rankPointsLabel:SetFont(GetStandardFont(), 14, "")
     rankPointsLabel:SetShadowOffset(1, -1)
     rankPointsLabel:SetShadowColor(0, 0, 0, 1)
@@ -703,58 +740,56 @@ local function CreatePvPView(parentFrame)
     capExplanation:SetText("Each week, the Rank Points cap is increased, up to a maximum of 24750 for Rank 14.")
     subPanel.CapExplanation = capExplanation
 
-    -- Milestone Rewards Navigation Row (Left/Right Arrows + Non-clickable Banner Plate)
+    -- Milestone Rewards Navigation Banner (Blizzard atlas: UI-Character-Info-Title, 192x36)
     local rewardsNav = CreateFrame("Frame", "OnePanel_PvPRewardsNav", subPanel)
-    rewardsNav:SetPoint("TOPLEFT", capExplanation, "BOTTOMLEFT", -2, -18)
-    rewardsNav:SetPoint("TOPRIGHT", capExplanation, "BOTTOMRIGHT", 2, -18)
-    rewardsNav:SetHeight(28)
+    rewardsNav:SetPoint("TOPLEFT", subPanel, "TOPLEFT", 3, -118)
+    rewardsNav:SetPoint("TOPRIGHT", subPanel, "TOPRIGHT", -3, -118)
+    rewardsNav:SetHeight(36)
     subPanel.RewardsNav = rewardsNav
 
-    -- Previous Rank Arrow Button (<)
+    -- Background Banner Texture (atlas: UI-Character-Info-Title, matching Blizzard CharacterFrameSidePaneCategoryTemplate)
+    local bannerBg = rewardsNav:CreateTexture(nil, "BACKGROUND")
+    bannerBg:SetAllPoints(rewardsNav)
+    if SafeHasAtlas("UI-Character-Info-Title") then
+        bannerBg:SetAtlas("UI-Character-Info-Title")
+    else
+        bannerBg:SetColorTexture(0.12, 0.10, 0.08, 0.85)
+    end
+    rewardsNav.Bg = bannerBg
+
+    -- Previous Rank Arrow Button (<) embedded inside left edge
     local prevBtn = CreateFrame("Button", "OnePanel_PvPPrevRewardBtn", rewardsNav)
-    prevBtn:SetSize(22, 22)
-    prevBtn:SetPoint("LEFT", rewardsNav, "LEFT", 0, 0)
+    prevBtn:SetSize(18, 18)
+    prevBtn:SetPoint("LEFT", rewardsNav, "LEFT", 6, 0)
     prevBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookSearch-PrevPage-Up")
     prevBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookSearch-PrevPage-Down")
     prevBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookSearch-PrevPage-Disabled")
     prevBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
     rewardsNav.PrevBtn = prevBtn
 
-    -- Next Rank Arrow Button (>)
+    -- Next Rank Arrow Button (>) embedded inside right edge
     local nextBtn = CreateFrame("Button", "OnePanel_PvPNextRewardBtn", rewardsNav)
-    nextBtn:SetSize(22, 22)
-    nextBtn:SetPoint("RIGHT", rewardsNav, "RIGHT", 0, 0)
+    nextBtn:SetSize(18, 18)
+    nextBtn:SetPoint("RIGHT", rewardsNav, "RIGHT", -6, 0)
     nextBtn:SetNormalTexture("Interface\\Buttons\\UI-SpellbookSearch-NextPage-Up")
     nextBtn:SetPushedTexture("Interface\\Buttons\\UI-SpellbookSearch-NextPage-Down")
     nextBtn:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookSearch-NextPage-Disabled")
     nextBtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
     rewardsNav.NextBtn = nextBtn
 
-    -- Center Banner Plate (Frame, non-clickable display plate matching Blizzard etched header style)
-    local banner = CreateFrame("Frame", nil, rewardsNav, "BackdropTemplate")
-    banner:SetPoint("LEFT", prevBtn, "RIGHT", 4, 0)
-    banner:SetPoint("RIGHT", nextBtn, "LEFT", -4, 0)
-    banner:SetHeight(26)
-    banner:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8x8",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = false,
-        tileSize = 0,
-        edgeSize = 10,
-        insets = { left = 2, right = 2, top = 2, bottom = 2 },
-    })
-    banner:SetBackdropColor(0.08, 0.08, 0.10, 0.90)
-    banner:SetBackdropBorderColor(0.40, 0.35, 0.28, 0.85)
-
-    local bannerText = banner:CreateFontString(nil, "OVERLAY")
-    bannerText:SetPoint("CENTER", banner, "CENTER", 0, 0)
-    bannerText:SetFont(GetStandardFont(), 12, "")
-    bannerText:SetTextColor(1, 0.85, 0.2, 1)
+    -- Center Title Label (11pt GameFontNormal, gold, perfectly sized to never overflow 150px inner width)
+    local bannerText = rewardsNav:CreateFontString(nil, "OVERLAY")
+    bannerText:SetPoint("LEFT", prevBtn, "RIGHT", 4, 1)
+    bannerText:SetPoint("RIGHT", nextBtn, "LEFT", -4, 1)
+    bannerText:SetJustifyH("CENTER")
+    bannerText:SetJustifyV("MIDDLE")
+    bannerText:SetWordWrap(false)
+    bannerText:SetFont(GetStandardFont(), 11, "")
+    bannerText:SetTextColor(1, 0.82, 0, 1)
     bannerText:SetShadowOffset(1, -1)
     bannerText:SetShadowColor(0, 0, 0, 1)
     bannerText:SetText("Next Rewards at Rank 1")
-    banner.Text = bannerText
-    rewardsNav.Banner = banner
+    rewardsNav.BannerText = bannerText
 
     -- Arrow Click Navigation Handlers
     prevBtn:SetScript("OnClick", function()
@@ -767,36 +802,40 @@ local function CreatePvPView(parentFrame)
         if container.Refresh then container:Refresh() end
     end)
 
-    -- Reward Item Container Card
+    -- Reward Item Container Card (Matching CharacterFrameSidePaneIconRowTemplate)
     local rewardCard = CreateFrame("Frame", nil, subPanel)
-    rewardCard:SetPoint("TOPLEFT", rewardsNav, "BOTTOMLEFT", 0, -14)
-    rewardCard:SetPoint("TOPRIGHT", rewardsNav, "BOTTOMRIGHT", 0, -14)
-    rewardCard:SetHeight(48)
+    rewardCard:SetPoint("TOPLEFT", rewardsNav, "BOTTOMLEFT", 0, -12)
+    rewardCard:SetPoint("TOPRIGHT", rewardsNav, "BOTTOMRIGHT", 0, -12)
+    rewardCard:SetHeight(40)
 
-    -- Item Icon Frame (With metallic border)
+    -- Item Icon Slot (atlas: UI-Character-Info-GearSlot)
     local rewardItemIcon = CreateFrame("Button", nil, rewardCard)
-    rewardItemIcon:SetSize(40, 40)
+    rewardItemIcon:SetSize(36, 36)
     rewardItemIcon:SetPoint("LEFT", rewardCard, "LEFT", 4, 0)
 
-    local iconTex = rewardItemIcon:CreateTexture(nil, "ARTWORK")
-    iconTex:SetSize(38, 38)
-    iconTex:SetPoint("CENTER", rewardItemIcon, "CENTER", 0, 0)
-    iconTex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-    rewardItemIcon.Texture = iconTex
+    local iconSlotBg = rewardItemIcon:CreateTexture(nil, "BACKGROUND")
+    iconSlotBg:SetSize(36, 36)
+    iconSlotBg:SetPoint("CENTER", rewardItemIcon, "CENTER", 0, 0)
+    if SafeHasAtlas("UI-Character-Info-GearSlot") then
+        iconSlotBg:SetAtlas("UI-Character-Info-GearSlot", true)
+    else
+        iconSlotBg:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    end
+    rewardItemIcon.SlotBg = iconSlotBg
 
-    local iconBorder = rewardItemIcon:CreateTexture(nil, "OVERLAY")
-    iconBorder:SetSize(42, 42)
-    iconBorder:SetPoint("CENTER", rewardItemIcon, "CENTER", 0, 0)
-    iconBorder:SetTexture("Interface\\Buttons\\UI-Quickslot2")
-    rewardItemIcon.Border = iconBorder
+    local iconTex = rewardItemIcon:CreateTexture(nil, "ARTWORK")
+    iconTex:SetSize(30, 30)
+    iconTex:SetPoint("CENTER", rewardItemIcon, "CENTER", 0, 0)
+    iconTex:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    rewardItemIcon.Texture = iconTex
 
     -- Reward Title Text
     local rewardTitleText = rewardCard:CreateFontString(nil, "OVERLAY")
-    rewardTitleText:SetPoint("LEFT", rewardItemIcon, "RIGHT", 10, 0)
+    rewardTitleText:SetPoint("LEFT", rewardItemIcon, "RIGHT", 8, 0)
     rewardTitleText:SetPoint("RIGHT", rewardCard, "RIGHT", -2, 0)
     rewardTitleText:SetJustifyH("LEFT")
     rewardTitleText:SetWordWrap(true)
-    rewardTitleText:SetFont(GetStandardFont(), 14, "")
+    rewardTitleText:SetFont(GetStandardFont(), 13, "")
     rewardTitleText:SetTextColor(1, 0.82, 0, 1)
     rewardTitleText:SetShadowOffset(1, -1)
     rewardTitleText:SetShadowColor(0, 0, 0, 1)
@@ -806,8 +845,8 @@ local function CreatePvPView(parentFrame)
 
     -- Quartermaster Location Instruction
     local quartermasterText = subPanel:CreateFontString(nil, "OVERLAY")
-    quartermasterText:SetPoint("TOPLEFT", rewardCard, "BOTTOMLEFT", 4, -16)
-    quartermasterText:SetPoint("TOPRIGHT", rewardCard, "BOTTOMRIGHT", -4, -16)
+    quartermasterText:SetPoint("TOPLEFT", rewardCard, "BOTTOMLEFT", 4, -14)
+    quartermasterText:SetPoint("TOPRIGHT", rewardCard, "BOTTOMRIGHT", -4, -14)
     quartermasterText:SetJustifyH("LEFT")
     quartermasterText:SetWordWrap(true)
     quartermasterText:SetFont(GetStandardFont(), 13, "")
@@ -830,9 +869,49 @@ local function CreatePvPView(parentFrame)
         emblemFrame.RankBadgeText:SetText(tostring(data.currentRank))
 
         if data.isAlliance then
-            emblemFrame.Icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+            if SafeHasAtlas("UI-Character-Info-Honor-Bar-BG-Alliance") then
+                emblemFrame.Bg:SetAtlas("UI-Character-Info-Honor-Bar-BG-Alliance", true)
+            else
+                emblemFrame.Bg:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+                emblemFrame.Bg:SetVertexColor(0.04, 0.04, 0.06, 0.95)
+            end
+
+            if data.currentRank == 0 then
+                if SafeHasAtlas("UI-Character-Info-Honor-Icon-Alliance") then
+                    emblemFrame.Icon:SetAtlas("UI-Character-Info-Honor-Icon-Alliance", true)
+                else
+                    emblemFrame.Icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+                end
+            else
+                local rankAtlas = string.format("UI-Character-Info-Honor-Icon-%d", data.currentRank)
+                if SafeHasAtlas(rankAtlas) then
+                    emblemFrame.Icon:SetAtlas(rankAtlas, true)
+                else
+                    emblemFrame.Icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Alliance")
+                end
+            end
         else
-            emblemFrame.Icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
+            if SafeHasAtlas("UI-Character-Info-Honor-Bar-BG-Horde") then
+                emblemFrame.Bg:SetAtlas("UI-Character-Info-Honor-Bar-BG-Horde", true)
+            else
+                emblemFrame.Bg:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+                emblemFrame.Bg:SetVertexColor(0.04, 0.04, 0.06, 0.95)
+            end
+
+            if data.currentRank == 0 then
+                if SafeHasAtlas("UI-Character-Info-Honor-Icon-Horde") then
+                    emblemFrame.Icon:SetAtlas("UI-Character-Info-Honor-Icon-Horde", true)
+                else
+                    emblemFrame.Icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
+                end
+            else
+                local rankAtlas = string.format("UI-Character-Info-Honor-Icon-%d", data.currentRank)
+                if SafeHasAtlas(rankAtlas) then
+                    emblemFrame.Icon:SetAtlas(rankAtlas, true)
+                else
+                    emblemFrame.Icon:SetTexture("Interface\\TargetingFrame\\UI-PVP-Horde")
+                end
+            end
         end
 
         -- Rank Points & Bar
@@ -875,9 +954,9 @@ local function CreatePvPView(parentFrame)
 
         -- Update Banner Plate Text and Arrow Button States
         if inspectedRank == (data.currentRank + 1) then
-            banner.Text:SetText(string.format("Next Rewards at Rank %d", inspectedRank))
+            rewardsNav.BannerText:SetText(string.format("Next Rewards at Rank %d", inspectedRank))
         else
-            banner.Text:SetText(string.format("Rewards at Rank %d", inspectedRank))
+            rewardsNav.BannerText:SetText(string.format("Rewards at Rank %d", inspectedRank))
         end
 
         prevBtn:SetEnabled(inspectedRank > 1)
